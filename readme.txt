@@ -1,12 +1,12 @@
 ALEXIE Tree
 
-The Assets, Liabilities, Expenses, Income and Equity Tree
-that organizes your personal finances
+Organize your personal finances with the
+Assets, Liabilities, Expenses, Income and Equity Tree
+
 
 Features:
 
-- Real-time Firebase backend
-- Double-entry accounting logic
+- Double-entry accounting structure
 - Nested accounts
 - Split transactions
 - Multiple currencies

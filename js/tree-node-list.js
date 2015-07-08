@@ -52,13 +52,16 @@ TreeNodeList.prototype.addNodes = function(nodes) {
   } 
 }
 
-TreeNodeList.prototype.accountSign = function(id) {
-  var type = this.node(id).type;
-  if (type !== "account") {
-    throw new Error("accountSign() expects account, but " + type + " passed.");
-  }
-  return this.node(id).sign;
-}
+/* MOVED TO ACCOUNT-TREE-NODE-LIST
+   TreeNodeList.prototype.accountSign = function(id) {
+   var type = this.node(id).type;
+   if (type !== "account") {
+   throw new Error("accountSign() expects account, but " + type + " passed.");
+   }
+   return this.node(id).sign;
+   }
+*/
+
 
 TreeNodeList.prototype.contains = function(id) {
   return _.filter(this.nodes, { 'id': id })[0];
@@ -201,44 +204,46 @@ TreeNodeList.prototype.add = function(newNode) {
   // 
 };
 
-TreeNodeList.prototype.recordTransaction = function(accounts, transaction) {
-  var debit = transaction.debit;
-  var credit = transaction.credit;
-  var description = transaction.description;
-  
-  // throw error if debit or credit do not exist
-  if (debit !== null && accounts.node(debit) === undefined) {
-    throw new Error("Cannot add transaction " + description + ", debit " + debit + " not found");
-  }
+/* MOVED TO TRANSACTION-TREE-NODE-LIST
+   TreeNodeList.prototype.recordTransaction = function(accounts, transaction) {
+   var debit = transaction.debit;
+   var credit = transaction.credit;
+   var description = transaction.description;
+   
+   // throw error if debit or credit do not exist
+   if (debit !== null && accounts.node(debit) === undefined) {
+   throw new Error("Cannot add transaction " + description + ", debit " + debit + " not found");
+   }
 
-  if (credit !== null && accounts.node(credit) === undefined) {
-    throw new Error("Cannot add transaction " + description + ", credit " + credit + " not found");
-  }
+   if (credit !== null && accounts.node(credit) === undefined) {
+   throw new Error("Cannot add transaction " + description + ", credit " + credit + " not found");
+   }
 
-  if (debit !== null && credit !== null && currency !== null && amount !== null) {
-    var currency = transaction.currency;
-    var amount = transaction.amount;
+   if (debit !== null && credit !== null && currency !== null && amount !== null) {
+   var currency = transaction.currency;
+   var amount = transaction.amount;
 
-    var debitAccount = accounts.node(debit);
-    var creditAccount = accounts.node(credit);
+   var debitAccount = accounts.node(debit);
+   var creditAccount = accounts.node(credit);
 
-    var debitSign = accounts.accountSign(debit);
-    var creditSign = accounts.accountSign(credit);
+   var debitSign = accounts.accountSign(debit);
+   var creditSign = accounts.accountSign(credit);
 
-    if (!debitAccount.balance[currency.code]) {
-      debitAccount.balance[currency.code] = 0;
-    }
-    
-    if (!creditAccount.balance[currency.code]) {
-      creditAccount.balance[currency.code] = 0;
-    }
-    
-    debitAccount.balance[currency.code] += amount * debitSign;
-    creditAccount.balance[currency.code] -= amount * creditSign;
-  }
-  
-  this.add(transaction);
-};
+   if (!debitAccount.balance[currency.code]) {
+   debitAccount.balance[currency.code] = 0;
+   }
+   
+   if (!creditAccount.balance[currency.code]) {
+   creditAccount.balance[currency.code] = 0;
+   }
+   
+   debitAccount.balance[currency.code] += amount * debitSign;
+   creditAccount.balance[currency.code] -= amount * creditSign;
+   }
+   
+   this.add(transaction);
+   };
+*/
 
 // build trees on demand
 TreeNodeList.prototype.buildTreeHierarchy = function(rootId) {
@@ -316,41 +321,42 @@ TreeNodeList.prototype.printTree = function(rootId) {
   return result;
 }
 
-TreeNodeList.prototype.currencies = function() {
-  var currencyTable = {};
+/* MOVED TO TRANSACTION-TREE-NODE-LIST
+   TreeNodeList.prototype.currencies = function() {
+   var currencyTable = {};
 
-  function addCurrencyToTable(currency) {
-    var currencyCode = currency.code;
-    
-    if (!currencyTable[currencyCode]) {
-      console.log(currencyCode);
-      
-      currencyTable[currencyCode] = currency;
-    }
-  }
-  // collect currencies
-  var currenciesList = [];
-  _.forEach(this.nodes, function(node) {
+   function addCurrencyToTable(currency) {
+   var currencyCode = currency.code;
+   
+   if (!currencyTable[currencyCode]) {
+   
+   currencyTable[currencyCode] = currency;
+   }
+   }
+   // collect currencies
+   var currenciesList = [];
+   _.forEach(this.nodes, function(node) {
 
-    // node is a transaction
-    if (node.currency) {
-      currenciesList = _(currenciesList).union(node.currency.code);
-      addCurrencyToTable(node.currency);
-    }
+   // node is a transaction
+   if (node.currency) {
+   currenciesList = _(currenciesList).union(node.currency.code);
+   addCurrencyToTable(node.currency);
+   }
 
-    // node is an account
-    if (node.balance) {
-      currenciesList = _(currenciesList).union(_.keysIn(node.balance));
-    }
+   // node is an account
+   if (node.balance) {
+   currenciesList = _(currenciesList).union(_.keysIn(node.balance));
+   }
 
-    if (node.cumulativeTotal) {
-      currenciesList = _(currenciesList).union(_.keysIn(node.cumulativeTotal));
-    }
-  });
+   if (node.cumulativeTotal) {
+   currenciesList = _(currenciesList).union(_.keysIn(node.cumulativeTotal));
+   }
+   });
 
-  currencyTable.list = currenciesList.value();
-  return currencyTable;;
-}
+   currencyTable.list = currenciesList.value();
+   return currencyTable;;
+   }
+*/
 
 TreeNodeList.prototype.tabulate = function(currencies) {
   var result = { id: null, children: [] };
@@ -381,19 +387,18 @@ TreeNodeList.prototype.tabulate = function(currencies) {
 
         if (fullNode.balance) {
           newNode.balance = JSON.stringify(fullNode.balance);
-          _.forEach(currencies.list, function(currencyCode) {
+          _.forEach(currencies.list(), function(currencyCode) {            
             if (fullNode.balance[currencyCode]) {
-              console.log(" full node " + JSON.stringify(currencies));
-              newNode["balanceIn" + currencyCode] = formatMoney(currencies[currencyCode], fullNode.balance[currencyCode]);
+              newNode["balanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.balance[currencyCode]);
             }
           });
         }
 
         if (fullNode.cumulativeTotal) {
           newNode.cumulativeTotal = JSON.stringify(fullNode.cumulativeTotal);
-          _.forEach(currencies.list, function(currencyCode) {
+          _.forEach(currencies.list(), function(currencyCode) {
             if (fullNode.cumulativeTotal[currencyCode]) {
-              newNode["cumulativeTotalIn" + currencyCode] = formatMoney(currencies[currencyCode], fullNode.cumulativeTotal[currencyCode]);
+              newNode["cumulativeTotalIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeTotal[currencyCode]);
             }
           });
         }
@@ -401,7 +406,7 @@ TreeNodeList.prototype.tabulate = function(currencies) {
         // node is a transaction
         if (fullNode.amount) {
           if (fullNode.amount) {
-            newNode["balanceIn" + fullNode.currency.code] = formatMoney(currencies[fullNode.currency.code], fullNode.amount);
+            newNode["balanceIn" + fullNode.currency] = formatMoney(currencies.node(fullNode.currency), fullNode.amount);
           }
         }
         
@@ -569,114 +574,118 @@ TreeNodeList.prototype.rootId = function(id) {
 }
 
 
+/* MOVED TO TRANSACTION-TREE-NODE-LIST
 // to be called with transactions only
 TreeNodeList.prototype.computeCumulativeTotal = function(accounts, transactions) {
-  transactions = transactions || this.nodes;
+transactions = transactions || this.nodes;
 
-  if (transactions.length === 0) {
-    console.warn("Compute cumulativeTotal called with no transactions");
-    return;
-  }
-  
-  if (transactions[0].type !== "transaction") {
-    throw new Error("computeCumulativeTotal() must be called as transactions.computeCumulativeTotal(accounts)");
-  }
-  
-  function bubble_amount(source, money) {
-    if (!source.cumulativeTotal[money.currency.code]) {
-      source.cumulativeTotal[money.currency.code] = 0;
-    }
-    source.cumulativeTotal[money.currency.code] += money.amount;
-    if (source.parentId) {
-      bubble_amount(accounts.node(source.parentId), money);
-    }
-  }
-
-  _.forEach(accounts.nodes, function(account) {
-    account.cumulativeTotal = {};
-  });
-
-  _.forEach(transactions, function(transaction) {
-    var debit = transaction.debit;
-    var credit = transaction.credit;
-    var description = transaction.description;
-    
-    // throw error if debit or credit do not exist
-    if (debit !== null && accounts.node(debit) === undefined) {
-      throw new Error("Cannot add transaction " + description + ", debit " + debit + " not found");
-    }
-
-    if (credit !== null && accounts.node(credit) === undefined) {
-      throw new Error("Cannot add transaction " + description + ", credit " + credit + " not found");
-    }
-
-    if (debit !== null && credit !== null && currency !== null && amount !== null) {
-      var currency = transaction.currency;
-      var amount = transaction.amount;
-      var debitAccount = accounts.node(debit);
-      var creditAccount = accounts.node(credit);
-      var debitSign = accounts.accountSign(debit);
-      var creditSign = accounts.accountSign(credit);
-      
-      bubble_amount(debitAccount, { currency: currency, amount: amount * debitSign });
-      bubble_amount(creditAccount, { currency: currency, amount: -amount * creditSign });
-    }
-  });
+if (transactions.length === 0) {
+console.warn("Compute cumulativeTotal called with no transactions");
+return;
 }
 
-TreeNodeList.prototype.accumulate = function() {
-  var treeNodeList = this;
+if (transactions[0].type !== "transaction") {
+throw new Error("computeCumulativeTotal() must be called as transactions.computeCumulativeTotal(accounts)");
+}
 
-  function bubble_amount(source, money) {
-    if (!source.cumulativeTotal[money.currency.code]) {
-      source.cumulativeTotal[money.currency.code] = 0;
-    }
-    source.cumulativeTotal[money.currency.code] += money.amount;
-    if (source.parentId) {
-      bubble_amount(treeNodeList.node(source.parentId), money);
-    }
-  }
+function bubble_amount(source, money) {
+if (!source.cumulativeTotal[money.currency.code]) {
+source.cumulativeTotal[money.currency.code] = 0;
+}
+source.cumulativeTotal[money.currency.code] += money.amount;
+if (source.parentId) {
+bubble_amount(accounts.node(source.parentId), money);
+}
+}
 
-  if (this.nodes.length === 0) {
-    // do nothing
-    console.warn("accumulate() called with no nodes.");
-    return;  
-  }
-  
-  if (this.nodes[0].type !== "transaction") {
-    console.warn("accumulate() is meant to be used for transactions.");
-    return;
-  }
+_.forEach(accounts.nodes, function(account) {
+account.cumulativeTotal = {};
+});
 
-  _.forEach(this.nodes, function(node) {
-    node.cumulativeTotal = {};
-  });
+_.forEach(transactions, function(transaction) {
+var debit = transaction.debit;
+var credit = transaction.credit;
+var description = transaction.description;
 
-  var grandTotal = { cumulativeTotal: {} };
+// throw error if debit or credit do not exist
+if (debit !== null && accounts.node(debit) === undefined) {
+throw new Error("Cannot add transaction " + description + ", debit " + debit + " not found");
+}
 
-  _.forEach(this.nodes, function(node) {
-    var currency = node.currency;
-    var amount = node.amount;
-    if (currency !== null && amount !== null) {
-      bubble_amount(node, { currency: currency, amount: amount });
+if (credit !== null && accounts.node(credit) === undefined) {
+throw new Error("Cannot add transaction " + description + ", credit " + credit + " not found");
+}
 
-      // add to grandTotal
-      if (!grandTotal.cumulativeTotal[currency.code]) {
-        grandTotal.cumulativeTotal[currency.code] = 0;
-      }
-      
-      grandTotal.cumulativeTotal[currency.code] += amount;
-    }
-  });
+if (debit !== null && credit !== null && currency !== null && amount !== null) {
+var currency = transaction.currency;
+var amount = transaction.amount;
+var debitAccount = accounts.node(debit);
+var creditAccount = accounts.node(credit);
+var debitSign = accounts.accountSign(debit);
+var creditSign = accounts.accountSign(credit);
 
-  var currencies = this.currencies();
+bubble_amount(debitAccount, { currency: currency, amount: amount * debitSign });
+bubble_amount(creditAccount, { currency: currency, amount: -amount * creditSign });
+}
+});
+}
+*/
 
-  _.forEach(currencies.list, function(currencyCode) {
-    grandTotal["cumulativeTotalIn" + currencyCode] = formatMoney(currencies[currencyCode], grandTotal.cumulativeTotal[currencyCode]);
-  });
 
-  grandTotal.name = "Grand Total";
-  
-  return grandTotal;
-};
+/* MOVED TO TRANSACTION-TREE-NODE-LIST
+   TreeNodeList.prototype.accumulate = function() {
+   var treeNodeList = this;
 
+   function bubble_amount(source, money) {
+   if (!source.cumulativeTotal[money.currency.code]) {
+   source.cumulativeTotal[money.currency.code] = 0;
+   }
+   source.cumulativeTotal[money.currency.code] += money.amount;
+   if (source.parentId) {
+   bubble_amount(treeNodeList.node(source.parentId), money);
+   }
+   }
+
+   if (this.nodes.length === 0) {
+   // do nothing
+   console.warn("accumulate() called with no nodes.");
+   return;  
+   }
+   
+   if (this.nodes[0].type !== "transaction") {
+   console.warn("accumulate() is meant to be used for transactions.");
+   return;
+   }
+
+   _.forEach(this.nodes, function(node) {
+   node.cumulativeTotal = {};
+   });
+
+   var grandTotal = { cumulativeTotal: {} };
+
+   _.forEach(this.nodes, function(node) {
+   var currency = node.currency;
+   var amount = node.amount;
+   if (currency !== null && amount !== null) {
+   bubble_amount(node, { currency: currency, amount: amount });
+
+   // add to grandTotal
+   if (!grandTotal.cumulativeTotal[currency.code]) {
+   grandTotal.cumulativeTotal[currency.code] = 0;
+   }
+   
+   grandTotal.cumulativeTotal[currency.code] += amount;
+   }
+   });
+
+   var currencies = this.currencies();
+
+   _.forEach(currencies.list(), function(currencyCode) {
+   grandTotal["cumulativeTotalIn" + currencyCode] = formatMoney(currencies[currencyCode], grandTotal.cumulativeTotal[currencyCode]);
+   });
+
+   grandTotal.name = "Grand Total";
+   
+   return grandTotal;
+   };
+*/

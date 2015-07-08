@@ -94,11 +94,10 @@ function makeTransactionTreeNodeList(currencies, accounts) {
   return transactions;
 }
 
+var transactions = makeTransactionTreeNodeList(currencies, accounts);
 
-// var transactions = makeTransactionTreeNodeList(currencies, accounts);
-
-// transactions.computeAccountsCumulativeTotal(currencies, accounts);
-// var accountsTreeTable = accounts.tabulate(currencies);
+transactions.computeAccountsCumulativeTotal(currencies, accounts);
+var accountsTreeTable = accounts.tabulate(currencies);
 
 // var transactionsGrandTotal = transactions.accumulate(currencies);
 // var transactionsTreeTable = transactions.tabulate(currencies);
