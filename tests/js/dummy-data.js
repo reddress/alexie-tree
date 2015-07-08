@@ -90,15 +90,7 @@ function makeTransactionTreeNodeList(currencies, accounts) {
   transactions.recordTransaction(currencies, accounts, new Transaction("cheese", "merc", "assets", now, "EUR", 2000, "Cheese"));
 
   transactions.recordTransaction(currencies, accounts, new Transaction("haircut", "hair", "assets", now, "USD", 1200, "Haircut"));
-  
+
+  transactions.recordTransaction(currencies, accounts, new Transaction("appleJuice", "stm", "assets", now, "EUR", 8000, "Apple juice"));
   return transactions;
 }
-
-
-// var transactions = makeTransactionTreeNodeList(currencies, accounts);
-
-// transactions.computeAccountsCumulativeTotal(currencies, accounts);
-// var accountsTreeTable = accounts.tabulate(currencies);
-
-// var transactionsGrandTotal = transactions.accumulate(currencies);
-// var transactionsTreeTable = transactions.tabulate(currencies);

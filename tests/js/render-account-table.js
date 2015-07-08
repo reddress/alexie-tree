@@ -10,8 +10,8 @@ $(document).ready(function() {
     { name: "children", type: "array" },
   ];
 
-  // define balance and cumulativeBalance fields
-  _.forEach(["cumulativeBalanceIn", "balanceIn"], function(fieldName) {
+  // define balance, cumulativeBalance, totalForSelectedTransactions fields
+  _.forEach(["cumulativeBalanceIn", "balanceIn", "totalForSelectedTransactionsIn"], function(fieldName) {
     _.forEach(currenciesList, function(currency) {
       jqxDataFields.push({
       name: fieldName + currency,
@@ -36,12 +36,13 @@ $(document).ready(function() {
   });
 
   jqxColumns = [
-    { text: "Name", columnGroup: "infoGroup", dataField: "name", minWidth: 200 },
+    { text: "Name", columnGroup: "infoGroup", dataField: "name", },
   ],
 
-  // define balance and cumulativeBalance columns
+  // define balance, cumulativeBalance, totalForSelectedTransactions columns
 
-  _.forEach(currenciesList, function(currency) {    jqxColumns.push({
+  _.forEach(currenciesList, function(currency) {
+    jqxColumns.push({
       text: currency,
       columnGroup: "cumulativeBalanceGroup",
       dataField: "cumulativeBalanceIn" + currency,
@@ -64,6 +65,18 @@ $(document).ready(function() {
     });
   });
   
+  _.forEach(currenciesList, function(currency) {
+    jqxColumns.push({
+      text: currency,
+      columnGroup: "totalForSelectedTransactionsGroup",
+      dataField: "totalForSelectedTransactionsIn" + currency,
+      align: "right",
+      cellsAlign: "right",
+      cellsRenderer: cellsRenderer,
+      width: 80,
+    });
+  });
+  
   $("#treeGrid").jqxTreeGrid({
     source: dataAdapter,
     columns: jqxColumns,
@@ -71,12 +84,14 @@ $(document).ready(function() {
       { text: "Information", name: "infoGroup", align: "center" },
       { text: "Balance", name: "balanceGroup", align: "center" },
       { text: "Cumulative Balance", name: "cumulativeBalanceGroup", align: "center" },
+      { text: "Total for selected transactions", name: "totalForSelectedTransactionsGroup", align: "center" },
     ],
   });
 
   // hide currencies with display: false
   _.forEach(currencies.nodes, function(currency) {
     if (!currency.display) {
+      $("#treeGrid").jqxTreeGrid('hideColumn', 'totalForSelectedTransactionsIn' + currency.code)
       $("#treeGrid").jqxTreeGrid('hideColumn', 'cumulativeBalanceIn' + currency.code)
       $("#treeGrid").jqxTreeGrid('hideColumn', 'balanceIn' + currency.code)
     }

@@ -104,27 +104,26 @@ TransactionTreeNodeList.prototype.currencies = function() {
   return currencyTable;;
 }
 
-/*
-TransactionTreeNodeList.prototype.computeAccountsCumulativeTotal = function(currencies, accounts) {
+TransactionTreeNodeList.prototype.computeTotalForAccounts = function(currencies, accounts) {
   var transactions = this.nodes;
 
   if (transactions.length === 0) {
-    console.warn("Compute cumulativeTotal called with no transactions");
+    console.warn("ComputeTotalPerAccount called with no transactions");
     return;
   }
   
   function bubble_amount(source, money) {
-    if (!source.cumulativeTotal[money.currency.code]) {
-      source.cumulativeTotal[money.currency.code] = 0;
+    if (!source.totalForSelectedTransactions[money.currency.code]) {
+      source.totalForSelectedTransactions[money.currency.code] = 0;
     }
-    source.cumulativeTotal[money.currency.code] += money.amount;
+    source.totalForSelectedTransactions[money.currency.code] += money.amount;
     if (source.parentId) {
       bubble_amount(accounts.node(source.parentId), money);
     }
   }
 
   _.forEach(accounts.nodes, function(account) {
-    account.cumulativeTotal = {};
+    account.totalForSelectedTransactions = {};
   });
 
   _.forEach(transactions, function(transaction) {
@@ -154,8 +153,6 @@ TransactionTreeNodeList.prototype.computeAccountsCumulativeTotal = function(curr
     }
   });
 }
-*/
-
 
 TransactionTreeNodeList.prototype.accumulate = function(currencies) {
   var treeNodeList = this;

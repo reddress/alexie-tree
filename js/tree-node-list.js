@@ -362,6 +362,17 @@ TreeNodeList.prototype.tabulate = function(currencies) {
   var result = { id: null, children: [] };
   var treeNodeList = this;
 
+  function separateToCurrencyColumn(fullNode, newNode, field) {
+    if (fullNode[field]) {
+      newNode[field] = JSON.stringify(fullNode[field]);
+      _.forEach(currencies.list(), function(currencyCode) {
+        if (fullNode[field][currencyCode]) {
+          newNode[field + "In" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode[field][currencyCode]);
+        }
+      });
+    }
+  }
+                
   function traverse(currentNode) {
     // use order given by previousSiblingsIds
     var lastChildId = treeNodeList.lastChildId(currentNode.id);
@@ -383,8 +394,15 @@ TreeNodeList.prototype.tabulate = function(currencies) {
         var newNode = {
           id: newNodeId,
           name: fullNode.name,
-          children: [] };
+          children: []
+        };
 
+        separateToCurrencyColumn(fullNode, newNode, "balance");
+        separateToCurrencyColumn(fullNode, newNode, "cumulativeTotal");
+        separateToCurrencyColumn(fullNode, newNode, "cumulativeBalance");
+        separateToCurrencyColumn(fullNode, newNode, "totalForSelectedTransactions");
+        
+        /*
         if (fullNode.balance) {
           newNode.balance = JSON.stringify(fullNode.balance);
           _.forEach(currencies.list(), function(currencyCode) {            
@@ -404,7 +422,7 @@ TreeNodeList.prototype.tabulate = function(currencies) {
         }
 
         if (fullNode.cumulativeBalance) {
-          newNode.cumulativeTotal = JSON.stringify(fullNode.cumulativeTotal);
+          newNode.cumulativeTotal = JSON.stringify(fullNode.cumulativeBalance);
           _.forEach(currencies.list(), function(currencyCode) {
             if (fullNode.cumulativeBalance[currencyCode]) {
               newNode["cumulativeBalanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeBalance[currencyCode]);
@@ -412,6 +430,15 @@ TreeNodeList.prototype.tabulate = function(currencies) {
           });
         }
 
+        if (fullNode.totalForSelectedTransactions) {
+          newNode.cumulativeTotal = JSON.stringify(fullNode.totalForSelectedTransactions);
+          _.forEach(currencies.list(), function(currencyCode) {
+            if (fullNode.totalForSelectedTransactions[currencyCode]) {
+              newNode["totalForSelectedTransactionsIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.totalForSelectedTransactions[currencyCode]);
+            }
+          });
+        }
+        */
 
         // node is a transaction
         if (fullNode.amount) {
