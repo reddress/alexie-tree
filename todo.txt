@@ -1,0 +1,116 @@
+SUBCLASS TREE NODE LIST
+
+into accounts, transactions, and currencies lists. They are different enough
+that aggregating cumulative and display functions became too messy
+
+Example from http://eloquentjavascript.net/06_object.html
+
+function RTextCell(text) {
+  TextCell.call(this, text);
+}
+RTextCell.prototype = Object.create(TextCell.prototype);
+RTextCell.prototype.draw = function(width, height) {
+  var result = [];
+  for (var i = 0; i < height; i++) {
+    var line = this.text[i] || "";
+    result.push(repeat(" ", width - line.length) + line);
+  }
+  return result;
+};
+
+JAVASCRIPT FILES
+
+keep them lowercase and use dashes between words
+
+CURRENCIES
+
+add a "display" property to a currency, to determine if it appears on HTML
+tables.
+
+Keep a separate tree node list of currencies, that will dictate order upon
+display.
+
+BALANCE VS CUMULATIVE TOTAL
+Balance includes entire transaction history, and is mainly used for assets.
+The balance is saved separately to avoid having to download the entire
+transaction history.
+
+Cumulative totals are computed for a given subset of transactions, such as for
+a given time period, or matching a search term. Because they are always
+changing, cumulative totals are not saved.
+
+Cumulative totals are computed by bubbling amounts up to parents
+
+LOADING FROM FIREBASE
+
+load from start of month
+
+TESTING
+
+run tests/checkUseStrict.py
+
+EDITING
+
+changing account names, transaction amounts, currencies, etc. must call redraw
+
+LOGIN/LOGOUT
+
+single page app, no redirects
+
+create demo account and recreate data on login
+
+logout must clear in-memory data
+
+SEARCH
+
+search by transaction description, date, amount
+
+THROTTLE
+
+limit to one transaction per second
+
+PRIVACY
+
+Encrypt data objects client-side, then save. Accounts and transactions are
+lists, and decrypted data stays only in local memory. Currencies stay
+unencrypted.
+
+Keep timestamp (when transaction occurred, not the time when added) separate
+and unencrypted, in order to filter efficiently
+
+ACCOUNT
+Assets, Liabilities, Expenses, Income and Equity are default accounts but can
+be edited and deleted.
+
+CURRENCY
+
+by default, include USD, EUR, GBP, JPY, INR, AUD, CAD, ZAR, BRL, TWD, NZD
+
+DATA EDITING
+
+What to do when an account is deleted? Transactions should stay, possibly show
+a [deleted] label when id for an account no longer exists
+
+DATA FLOW
+
+Draw screens based on
+
+1. loaded account data (from localStorage or Firebase)
+2. loaded transaction data
+
+When data is edited, everything needs to be redrawn
+
+SETTINGS
+checkbox for Liabilities, Equity and Income having negative sign (default: on)
+parent accounts include balance of all children (default: on)
+
+settings must be saved
+
+TO DO
+
+Get moment.js with timezones (most complete version)
+
+Test which combination of jqWidgets will be needed. The whole package is about
+10 MB
+
+See if xe.com has a live feed, show date of last quote

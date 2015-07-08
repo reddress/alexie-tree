@@ -1,0 +1,73 @@
+ALEXIE Tree
+(c) 2015 Heitor Chang <heitorchang@gmail.com>
+
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----------------------------------------------------------------------------
+This software uses jqWidgets v. 3.8.1
+http://www.jqwidgets.com/license/
+
+For non-commercial use, jqWidgets is licensed under the Creative Commons
+Attribution-NonCommercial 3.0 License
+
+http://creativecommons.org/licenses/by-nc/3.0/
+
+-----------------------------------------------------------------------------
+This software uses jQuery v. 1.11.3
+Copyright 2005, 2014 jQuery Foundation, Inc. and other contributors
+Released under the MIT license
+
+https://jquery.org/license/
+
+Licensed under the MIT License
+
+-----------------------------------------------------------------------------
+This software uses jQuery.blockUI v. 2.70.0
+Copyright (c) 2007-2013 M. Alsup
+
+http://malsup.com/jquery/block/
+
+Dual licensed under the MIT and GPL Licenses
+
+-----------------------------------------------------------------------------
+This software uses lodash v. 3.10.0
+Copyright 2012-2015 The Dojo Foundation
+https://lodash.com/license
+
+Licensed under the MIT License
+
+Based on Underscore.js 1.7.0,
+Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+
+-----------------------------------------------------------------------------
+This software uses QUnit v. 1.18.0
+Copyright jQuery Foundation and other contributors
+http://qunitjs.com/
+
+Licensed under the MIT License
+
+----------------------------------------------------------------------------
+This software uses moment.js v. 2.9.0
+Copyright Tim Wood, Iskren Chernev, Moment.js contributors
+http://momentjs.com/
+
+Licensed under the MIT License
