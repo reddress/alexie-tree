@@ -17,7 +17,7 @@ $(document).ready(function() {
   _.forEach(["cumulativeTotalIn", "balanceIn"], function(fieldName) {
     _.forEach(currenciesList, function(currency) {
       jqxDataFields.push({
-      name: fieldName + currency,
+        name: fieldName + currency,
         type: "string",
       });
     });
@@ -45,15 +45,15 @@ $(document).ready(function() {
   // define balance and cumulativeTotal columns
 
   _.forEach(currenciesList, function(currency) {    jqxColumns.push({
-      text: currency,
-      columnGroup: "cumulativeTotalGroup",
-      dataField: "cumulativeTotalIn" + currency,
-      align: "right",
-      cellsAlign: "right",
-      cellsRenderer: cellsRenderer,
-      width: 80,
-    });
+    text: currency,
+    columnGroup: "cumulativeTotalGroup",
+    dataField: "cumulativeTotalIn" + currency,
+    align: "right",
+    cellsAlign: "right",
+    cellsRenderer: cellsRenderer,
+    width: 80,
   });
+                                               });
   
   _.forEach(currenciesList, function(currency) {
     jqxColumns.push({
@@ -75,5 +75,13 @@ $(document).ready(function() {
       { text: "Balance", name: "balanceGroup", align: "center" },
       { text: "Cumulative Total", name: "cumulativeTotalGroup", align: "center" },
     ],
+  });
+
+  // hide currencies with display: false
+  _.forEach(currencies.nodes, function(currency) {
+    if (!currency.display) {
+      $("#treeGrid").jqxTreeGrid('hideColumn', 'cumulativeTotalIn' + currency.code)
+      $("#treeGrid").jqxTreeGrid('hideColumn', 'balanceIn' + currency.code)
+    }
   });
 });

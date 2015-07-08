@@ -10,8 +10,8 @@ $(document).ready(function() {
     { name: "children", type: "array" },
   ];
 
-  // define balance and cumulativeTotal fields
-  _.forEach(["cumulativeTotalIn", "balanceIn"], function(fieldName) {
+  // define balance and cumulativeBalance fields
+  _.forEach(["cumulativeBalanceIn", "balanceIn"], function(fieldName) {
     _.forEach(currenciesList, function(currency) {
       jqxDataFields.push({
       name: fieldName + currency,
@@ -39,12 +39,12 @@ $(document).ready(function() {
     { text: "Name", columnGroup: "infoGroup", dataField: "name", minWidth: 200 },
   ],
 
-  // define balance and cumulativeTotal columns
+  // define balance and cumulativeBalance columns
 
   _.forEach(currenciesList, function(currency) {    jqxColumns.push({
       text: currency,
-      columnGroup: "cumulativeTotalGroup",
-      dataField: "cumulativeTotalIn" + currency,
+      columnGroup: "cumulativeBalanceGroup",
+      dataField: "cumulativeBalanceIn" + currency,
       align: "right",
       cellsAlign: "right",
       cellsRenderer: cellsRenderer,
@@ -70,7 +70,15 @@ $(document).ready(function() {
     columnGroups: [
       { text: "Information", name: "infoGroup", align: "center" },
       { text: "Balance", name: "balanceGroup", align: "center" },
-      { text: "Cumulative Total", name: "cumulativeTotalGroup", align: "center" },
+      { text: "Cumulative Balance", name: "cumulativeBalanceGroup", align: "center" },
     ],
+  });
+
+  // hide currencies with display: false
+  _.forEach(currencies.nodes, function(currency) {
+    if (!currency.display) {
+      $("#treeGrid").jqxTreeGrid('hideColumn', 'cumulativeBalanceIn' + currency.code)
+      $("#treeGrid").jqxTreeGrid('hideColumn', 'balanceIn' + currency.code)
+    }
   });
 });

@@ -403,6 +403,16 @@ TreeNodeList.prototype.tabulate = function(currencies) {
           });
         }
 
+        if (fullNode.cumulativeBalance) {
+          newNode.cumulativeTotal = JSON.stringify(fullNode.cumulativeTotal);
+          _.forEach(currencies.list(), function(currencyCode) {
+            if (fullNode.cumulativeBalance[currencyCode]) {
+              newNode["cumulativeBalanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeBalance[currencyCode]);
+            }
+          });
+        }
+
+
         // node is a transaction
         if (fullNode.amount) {
           if (fullNode.amount) {

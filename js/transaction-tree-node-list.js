@@ -13,6 +13,21 @@ TransactionTreeNodeList.prototype.recordTransaction = function(currencies, accou
   var description = transaction.description;
   var currencyCode = transaction.currency;
   
+  function bubble_amount(source, money) {
+    if (!source.cumulativeBalance) {
+      source.cumulativeBalance = {};
+    }
+    
+    if (!source.cumulativeBalance[money.currencyCode]) {
+      source.cumulativeBalance[money.currencyCode] = 0;
+    }
+    
+    source.cumulativeBalance[money.currencyCode] += money.amount;
+    if (source.parentId) {
+      bubble_amount(accounts.node(source.parentId), money);
+    }
+  }
+
   // throw error if debit or credit do not exist
   if (debit !== null && accounts.node(debit) === undefined) {
     throw new Error("Cannot add transaction " + description + ", debit " + debit + " not found");
@@ -42,6 +57,10 @@ TransactionTreeNodeList.prototype.recordTransaction = function(currencies, accou
     
     debitAccount.balance[currencyCode] += amount * debitSign;
     creditAccount.balance[currencyCode] -= amount * creditSign;
+
+    // for cumulative balances
+    bubble_amount(debitAccount, { currencyCode: currencyCode, amount: amount * debitSign });
+    bubble_amount(creditAccount, { currencyCode: currencyCode, amount: -amount * creditSign });
   }
   
   this.add(transaction);
@@ -85,6 +104,7 @@ TransactionTreeNodeList.prototype.currencies = function() {
   return currencyTable;;
 }
 
+/*
 TransactionTreeNodeList.prototype.computeAccountsCumulativeTotal = function(currencies, accounts) {
   var transactions = this.nodes;
 
@@ -134,6 +154,8 @@ TransactionTreeNodeList.prototype.computeAccountsCumulativeTotal = function(curr
     }
   });
 }
+*/
+
 
 TransactionTreeNodeList.prototype.accumulate = function(currencies) {
   var treeNodeList = this;
@@ -158,6 +180,7 @@ TransactionTreeNodeList.prototype.accumulate = function(currencies) {
     node.cumulativeTotal = {};
   });
 
+  // clear cumulative totals
   var grandTotal = { cumulativeTotal: {} };
 
   _.forEach(currencies.list(), function(currencyCode) {
