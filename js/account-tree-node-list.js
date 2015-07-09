@@ -13,6 +13,6 @@ AccountTreeNodeList.prototype.accountSign = function(id) {
 AccountTreeNodeList.prototype.renderTable = function(currencies, domId) {
   var accountsTreeTable = this.tabulate(currencies);
 
-  var fields = ["totalForSelectedTransactions", "cumulativeBalance", "balance"];
+  var fields = ["cumulativeBalance", "totalForSelectedTransactions", "balance"];
   TreeNodeList.prototype.renderTable.call(this, domId, fields, accountsTreeTable);
 };

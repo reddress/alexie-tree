@@ -60,6 +60,8 @@ function makeAccountTreeNodeList() {
   accounts.add(new Account("home", "Home", 1, "expenses"));
   accounts.add(new Account("delivery", "Delivery", 1, "home"));
 
+  accounts.add(new Account("union", "Union Bank", 1, "bank"));
+
   return accounts;
 }
 var accounts = makeAccountTreeNodeList();
@@ -92,5 +94,8 @@ function makeTransactionTreeNodeList(currencies, accounts) {
   transactions.recordTransaction(currencies, accounts, new Transaction("haircut", "hair", "assets", now, "USD", 1200, "Haircut"));
 
   transactions.recordTransaction(currencies, accounts, new Transaction("appleJuice", "stm", "assets", now, "EUR", 8000, "Apple juice"));
+
+  transactions.recordTransaction(currencies, accounts, new Transaction("incomeTw", "union", "income", now, "TWD", 30140700, "Receipt Lottery"));
+  
   return transactions;
 }

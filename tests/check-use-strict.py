@@ -6,7 +6,7 @@ import fnmatch
 import os
 # import sys
 
-print('Check if all JavaScript files have "use strict";')
+print('Checking if all JavaScript files have "use strict";')
 
 FOLDERS = ['../js', '../tests/js'];
 
@@ -24,4 +24,4 @@ for folder in FOLDERS:
                     print('MISSING "use strict"; ' + os.path.join(root, filename))
                     all_ok = False
 if all_ok:
-    print("All OK");
+    print("\nAll OK!\n");

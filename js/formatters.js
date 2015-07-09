@@ -21,7 +21,14 @@ function formatMoney(currency, amount) {
 
     var digits = number.length;
 
-    number = number.slice(0, digits-2) + "." + number.slice(digits-2);
+    var whole = number.slice(0, digits-2);
+    var fraction = number.slice(digits-2);
+    
+    whole = whole.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    
+    number = whole + "." + fraction;
+  } else {
+    number = number.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
   }
   
   var result = "";

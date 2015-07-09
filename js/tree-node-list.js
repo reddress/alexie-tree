@@ -612,7 +612,7 @@ TreeNodeList.prototype.rootId = function(id) {
 TreeNodeList.prototype.renderTable = function(domId, dataFieldNames, dataTable) {
   var cellsRenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
     if (value.indexOf("(") !== -1) {
-      return '<span style="color: #ff0000;">' + value + '</span>';
+      return '<span style="color: ' + jqxConstants.negativeAmountColor + ';">' + value + '</span>';
     }
   }
 
@@ -646,7 +646,7 @@ TreeNodeList.prototype.renderTable = function(domId, dataFieldNames, dataTable) 
   });
 
   var jqxColumns = [
-    { text: "Name", columnGroup: "infoGroup", dataField: "name", minWidth: 200 },
+    { text: "Name", columnGroup: "infoGroup", dataField: "name", width: jqxConstants.nameColumnWidth },
   ];
 
   // define jqxColumns
@@ -660,7 +660,7 @@ TreeNodeList.prototype.renderTable = function(domId, dataFieldNames, dataTable) 
         align: "right",
         cellsAlign: "right",
         cellsRenderer: cellsRenderer,
-        width: 80,
+        width: jqxConstants.amountColumnWidth,
       });
     });
   });
