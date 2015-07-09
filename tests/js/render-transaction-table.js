@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function() {
   // add Grand Total
   transactionsTreeTable.children.splice(0, 0, transactionsGrandTotal);

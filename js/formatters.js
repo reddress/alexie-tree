@@ -1,3 +1,5 @@
+"use strict";
+
 function formatMoney(currency, amount) {
   // save sign
   var sign = amount < 0 ? "-" : "";

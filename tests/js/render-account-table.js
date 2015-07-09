@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function() {
   var cellsRenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
     if (value.indexOf("(") !== -1) {
