@@ -1,6 +1,5 @@
-"use strict";
-
 $(document).ready(function() {
+  
   // add Grand Total
   transactionsTreeTable.children.splice(0, 0, transactionsGrandTotal);
   
@@ -86,4 +85,5 @@ $(document).ready(function() {
       $("#treeGrid").jqxTreeGrid('hideColumn', 'balanceIn' + currency.code)
     }
   });
-});
+})
+
