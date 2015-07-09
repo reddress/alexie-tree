@@ -1,3 +1,14 @@
+BALANCE VS CUMULATIVE TOTAL
+Balance includes entire transaction history, and is mainly used for assets.
+The balance is saved separately to avoid having to download the entire
+transaction history.
+
+Cumulative totals are computed for a given subset of transactions, such as for
+a given time period, or matching a search term. Because they are always
+changing, cumulative totals are not saved.
+
+Cumulative totals are computed by bubbling amounts up to parents
+
 SPLIT TRANSACTIONS
 
 if a transaction has children, debit, credit, currency and amount are
@@ -107,13 +118,4 @@ Draw screens based on
 2. loaded transaction data
 
 When data is edited, everything needs to be redrawn
-
-SETTINGS
-checkbox for Liabilities, Equity and Income having negative sign (default: on)
-
-parent accounts include balance of all children (default: on)
-
-display name (e.g. Heitor Chang)
-
-settings must be saved
 

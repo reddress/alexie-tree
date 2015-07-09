@@ -46,3 +46,9 @@ function firstOfMonth() {
   
   return [day, month, year].join("/");
 }
+
+function camelCaseToRegular(camel) {
+  // http://stackoverflow.com/questions/4149276/javascript-camelcase-to-regular-form
+  return camel.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
+}
+

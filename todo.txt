@@ -1,49 +1,31 @@
-SUBCLASS TREE NODE LIST
+CONSOLIDATE TABLE DISPLAY
 
-into accounts, transactions, and currencies lists. They are different enough
-that aggregating cumulative and display functions became too messy
+TR
 
-Example from http://eloquentjavascript.net/06_object.html
+add grand total
 
-function RTextCell(text) {
-  TextCell.call(this, text);
-}
-RTextCell.prototype = Object.create(TextCell.prototype);
-RTextCell.prototype.draw = function(width, height) {
-  var result = [];
-  for (var i = 0; i < height; i++) {
-    var line = this.text[i] || "";
-    result.push(repeat(" ", width - line.length) + line);
-  }
-  return result;
-};
+define fields: cumul Total In, Bal In
+source: tr tree tabl
+push fields to jqxColumns
 
-JAVASCRIPT FILES
+dom id
 
-keep them lowercase and use dashes between words
+ACC
 
-CURRENCIES
+define fields: cumul Bal In, bal In, total for In
 
-add a "display" property to a currency, to determine if it appears on HTML
-tables.
+source: acc tree table
 
-Keep a separate tree node list of currencies, that will dictate order upon
-display.
+push fields to jqxColumns
 
-BALANCE VS CUMULATIVE TOTAL
-Balance includes entire transaction history, and is mainly used for assets.
-The balance is saved separately to avoid having to download the entire
-transaction history.
+hide columns for currency display false
 
-Cumulative totals are computed for a given subset of transactions, such as for
-a given time period, or matching a search term. Because they are always
-changing, cumulative totals are not saved.
+dom id
 
-Cumulative totals are computed by bubbling amounts up to parents
+--
 
-LOADING FROM FIREBASE
+jqwidgets sort
 
-load from start of month
 
 TESTING
 
@@ -69,14 +51,21 @@ THROTTLE
 
 limit to one transaction per second
 
+IMPORT/EXPORT DATA
+
+different formats like csv, pdf
+
 PRIVACY
 
-Encrypt data objects client-side, then save. Accounts and transactions are
+Encrypt sensitive data client-side, then save. Accounts and transactions are
 lists, and decrypted data stays only in local memory. Currencies stay
 unencrypted.
 
-Keep timestamp (when transaction occurred, not the time when added) separate
-and unencrypted, in order to filter efficiently
+Encrypt: transaction and account names/descriptions, amounts, currency names
+and codes
+
+Keep ids as Firebase ids, and timestamp (when transaction occurred, not the
+time when added) separate and unencrypted, in order to filter efficiently
 
 ACCOUNT
 Assets, Liabilities, Expenses, Income and Equity are default accounts but can
@@ -100,17 +89,20 @@ Draw screens based on
 
 When data is edited, everything needs to be redrawn
 
-SETTINGS
-checkbox for Liabilities, Equity and Income having negative sign (default: on)
-parent accounts include balance of all children (default: on)
-
-settings must be saved
-
-TO DO
-
-Get moment.js with timezones (most complete version)
-
 Test which combination of jqWidgets will be needed. The whole package is about
 10 MB
 
 See if xe.com has a live feed, show date of last quote
+
+LOADING FROM FIREBASE
+
+load from start of month
+
+SETTINGS
+
+checkbox for Liabilities, Equity and Income having negative sign (default: on)
+
+display name (e.g. Heitor Chang)
+
+settings must be saved
+

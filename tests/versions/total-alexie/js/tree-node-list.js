@@ -8,7 +8,6 @@ function TreeNodeList(id) {
   this.nodes = [];
 }
 
-// TODO Add in batches,
 // accumulate all node ids, then
 // use queue and move to back if parent or
 // previous sibling not found.
@@ -511,7 +510,6 @@ TreeNodeList.prototype.belongsTo = function(nodeId, parentId) {
   return nodeId === parentId || this.isChildOf(nodeId, parentId);
 }
 
-// TODO delete node
 // Balances of ancestors must change
 // Safer to allow deletion only when balance is zero
 // Force transfer of balance to new node

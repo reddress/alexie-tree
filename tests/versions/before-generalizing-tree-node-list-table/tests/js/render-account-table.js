@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function() {
   var cellsRenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
     if (value.indexOf("(") !== -1) {
@@ -35,9 +37,9 @@ $(document).ready(function() {
     }
   });
 
-  jqxColumns = [
+  var jqxColumns = [
     { text: "Name", columnGroup: "infoGroup", dataField: "name", },
-  ],
+  ];
 
   // define balance, cumulativeBalance, totalForSelectedTransactions columns
 

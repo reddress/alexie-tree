@@ -203,3 +203,14 @@ TransactionTreeNodeList.prototype.accumulate = function(currencies) {
   
   return grandTotal;
 };
+
+TransactionTreeNodeList.prototype.renderTable = function(currencies, domId) {
+  var transactionsGrandTotal = this.accumulate(currencies);
+  var transactionsTreeTable = this.tabulate(currencies);
+
+  // add grand total line
+  transactionsTreeTable.children.splice(0, 0, transactionsGrandTotal);
+
+  var fields = ["cumulativeTotal", "balance"];
+  TreeNodeList.prototype.renderTable.call(this, domId, fields, transactionsTreeTable);
+};

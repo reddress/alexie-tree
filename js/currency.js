@@ -9,7 +9,7 @@ function Currency(code, name, symbol, showCents, showSymbolOnLeft, display) {
   this.showCents = showCents;
   this.showSymbolOnLeft = showSymbolOnLeft;
 
-  this.id = code;
+  this.id = code;  // TODO change to firebase id
   this.parentId = null;
   this.previousSiblingId = null;
 

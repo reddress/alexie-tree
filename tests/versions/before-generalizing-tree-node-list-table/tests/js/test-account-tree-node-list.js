@@ -100,7 +100,7 @@ QUnit.test("Get immediate childrenIds of accounts", function(assert) {
   var t = makeAccountTreeNodeListBr();
   var accountsChildrenIds = t.immediateChildrenIds();
   assert.equal(accountsChildrenIds.length, 5, "There are five immediate (top-level) childrenIds");
-  // TODO check existence of one of the accounts
+
   assert.equal(accountsChildrenIds[0], "assets", "First child is assets");
 });
 

@@ -1,6 +1,6 @@
 "use strict";
 
-function Account(id, name, sign, parentId, previousSiblingId) {
+function Account(id, name, sign, parentId, previousSiblingId, display) {
   this.type = "account";
   
   this.id = id || null;
@@ -12,6 +12,12 @@ function Account(id, name, sign, parentId, previousSiblingId) {
   // save balance in order to avoid having to download the entire transaction
   // history to re-compute balance
   this.balance = {};
+
+  if (display === undefined) {
+    this.display = true;
+  } else {
+    this.display = display;
+  }
 }
 
 Account.prototype.clearBalance = function() {

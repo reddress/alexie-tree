@@ -111,7 +111,6 @@ QUnit.test("Get immediate childrenIds of accounts", function(assert) {
   var t = makeTreeNodeList();
   var accountsChildrenIds = t.immediateChildrenIds();
   assert.equal(accountsChildrenIds.length, 5, "There are five immediate (top-level) childrenIds");
-  // TODO check existence of one of the accounts
   assert.equal(accountsChildrenIds[0], "assets", "First child is assets");
 });
 
@@ -374,7 +373,6 @@ QUnit.test("Reverse transaction", function(assert) {
 */
 
 
-// TODO programmatically test UL tree
 /*
 QUnit.test("Create UL tree", function(assert) {
   var t = makeTreeNodeList();
@@ -385,4 +383,3 @@ QUnit.test("Create UL tree", function(assert) {
 });
 */
 
-// TODO test re-adding jumbled list of nodes to tree node list 

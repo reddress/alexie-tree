@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function() {
   
   // add Grand Total
@@ -39,22 +41,23 @@ $(document).ready(function() {
     }
   });
 
-  jqxColumns = [
+  var jqxColumns = [
     { text: "Name", columnGroup: "infoGroup", dataField: "name", minWidth: 200 },
-  ],
+  ];
 
   // define balance and cumulativeTotal columns
 
-  _.forEach(currenciesList, function(currency) {    jqxColumns.push({
-    text: currency,
-    columnGroup: "cumulativeTotalGroup",
-    dataField: "cumulativeTotalIn" + currency,
-    align: "right",
-    cellsAlign: "right",
-    cellsRenderer: cellsRenderer,
-    width: 80,
+  _.forEach(currenciesList, function(currency) {
+    jqxColumns.push({
+      text: currency,
+      columnGroup: "cumulativeTotalGroup",
+      dataField: "cumulativeTotalIn" + currency,
+      align: "right",
+      cellsAlign: "right",
+      cellsRenderer: cellsRenderer,
+      width: 80,
+    });
   });
-                                               });
   
   _.forEach(currenciesList, function(currency) {
     jqxColumns.push({

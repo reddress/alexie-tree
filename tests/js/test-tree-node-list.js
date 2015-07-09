@@ -1,22 +1,7 @@
 "use strict";
 
-// desired tree structure
-
-var desiredTreeNodeList = {
-  
-};
-
-function makeSimpleTreeNodeList() {
-  var result = new TreeNodeList();
-
-  result.add(new Account("assets", "Assets", 1));
-  result.add(new Account("expenses", "Expenses", 1));
- 
-  return result;
-}
-
-function makeTreeNodeList() {
-  var t = new TreeNodeList();
+function makeAccountTreeNodeListBr() {
+  var t = new AccountTreeNodeList();
   
   t.add(new Account("assets", "Assets", 1, null));
   t.add(new Account("bank", "Banks", 1, "assets"));
@@ -58,12 +43,10 @@ function makeTreeNodeList() {
   return t;
 }
 
-var t = makeTreeNodeList();
+var makeTree = makeAccountTreeNodeListBr;
 
-var makeTree = makeTreeNodeList;
-
-QUnit.test("Move to same place", function(assert) {
-  var t = makeTreeNodeList();
+QUnit.test("Move to same place in AccountTreeNodeList", function(assert) {
+  var t = makeAccountTreeNodeListBr();
 
   var jsonBefore = JSON.stringify(t.buildTreeHierarchy("groc"));
   t.moveTo("stm", "groc", "merc");
@@ -73,11 +56,13 @@ QUnit.test("Move to same place", function(assert) {
 
 
 QUnit.test("Find node", function(assert) {
+  var t = makeAccountTreeNodeListBr();
   var acct = t.contains("assets");
   assert.equal(acct.name, "Assets", "Find Assets");
 });
 
-QUnit.test("Adding not allowed by TreeNodeList", function(assert) {
+QUnit.test("Adding not allowed by AccountTreeNodeList", function(assert) {
+  var t = makeAccountTreeNodeListBr();
   assert.throws(
     function() {
       t.add(new Account("assets", "more assets", 1));
@@ -106,13 +91,13 @@ QUnit.test("Adding not allowed by TreeNodeList", function(assert) {
 // the following tests are from dazona.github.io/freegil
 
 QUnit.test("Get account and check for nonexistent", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.ok(t.node("bank"), "Bank exists");
   assert.notOk(t.node("nothing"), "id of nothing does not exist");
 });
 
 QUnit.test("Get immediate childrenIds of accounts", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   var accountsChildrenIds = t.immediateChildrenIds();
   assert.equal(accountsChildrenIds.length, 5, "There are five immediate (top-level) childrenIds");
 
@@ -120,7 +105,7 @@ QUnit.test("Get immediate childrenIds of accounts", function(assert) {
 });
 
 QUnit.test("Get all childrenIds of an account", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   var selfChildrenIds = t.childrenIds("self");
   
   // does not contain banks
@@ -134,28 +119,28 @@ QUnit.test("Get all childrenIds of an account", function(assert) {
 });
 
 QUnit.test("First child of a parent", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.equal(t.firstChildId(), "assets");
   assert.equal(t.firstChildId("bank"), "bradesco");
   assert.equal(t.firstChildId("body"), "hair");
 });
 
 QUnit.test("Last child of a parent", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.equal(t.lastChildId("body"), "hair");
   assert.equal(t.lastChildId("bank"), "hsbc");
   assert.equal(t.lastChildId(), "liabilities");
 });
 
 QUnit.test("Find next account", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.equal(t.nextSiblingId("bradesco"), "itau");
   assert.equal(t.nextSiblingId("hsbc"), null);
   assert.equal(t.nextSiblingId("assets"), "expenses");
 });
 
 QUnit.test("Move account at same level", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
 
   // move to front of level
   t.moveTo("caixa", "bank", null);  
@@ -190,7 +175,7 @@ QUnit.test("Move account at same level", function(assert) {
 });
 
 QUnit.test("Move account to topmost level", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
 
   // move to first item at topmost level
   t.moveTo("back", null, null);
@@ -210,7 +195,7 @@ QUnit.test("Move account to topmost level", function(assert) {
 });
 
 QUnit.test("Move to different branch", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
 
   // move to first item of different branch
   t.moveTo("merc", "bank", null);
@@ -243,7 +228,7 @@ QUnit.test("Move to different branch", function(assert) {
 });
 
 QUnit.test("Display flat list", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   var bt = t.buildTreeHierarchy();
   var f = t.flatten();
 
@@ -257,7 +242,7 @@ QUnit.test("Display flat list", function(assert) {
 });
 
 QUnit.test("Display as tree", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   t.moveTo("bradesco", "bank", "hsbc");
   var bt = t.buildTreeHierarchy();
   // console.log(JSON.stringify(bt, null, 2));
@@ -281,7 +266,7 @@ QUnit.test("Display as tree", function(assert) {
 });
 
 QUnit.test("Account is child of another", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.ok(t.isChildOf("bradesco", "bank"));
   assert.ok(!t.isChildOf("hair", "income"));
   assert.ok(t.isChildOf("hair", null));
@@ -291,7 +276,7 @@ QUnit.test("Account is child of another", function(assert) {
 });
 
 QUnit.test("Account belongs to another", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.ok(t.belongsTo("bradesco", "bank"));
   assert.ok(!t.belongsTo("hair", "income"));
   assert.ok(t.belongsTo("hair", null));
@@ -301,7 +286,7 @@ QUnit.test("Account belongs to another", function(assert) {
 });
 
 QUnit.test("Account is ancestor of another", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.ok(t.isAncestorOf(null, "income"));  // direct child
   assert.ok(!t.isAncestorOf("groc", "groc"));  // same account is not
   assert.ok(!t.isAncestorOf("hair", "self"));  // backwards
@@ -311,7 +296,7 @@ QUnit.test("Account is ancestor of another", function(assert) {
 });
 
 QUnit.test("Account sign", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.equal(t.accountSign("bank"), 1);
   assert.equal(t.accountSign("income"), -1);
   assert.equal(t.accountSign("credit"), -1);
@@ -319,13 +304,6 @@ QUnit.test("Account sign", function(assert) {
   assert.equal(t.accountSign("saved"), -1);
   assert.equal(t.accountSign("equity"), -1);
   assert.equal(t.accountSign("open"), -1);
-
-  var transactionTree = new TreeNodeList();
-  transactionTree.add(new Transaction("open", "bank", "open", new Date().getTime));
-  
-  assert.throws(function() { transactionTree.accountSign("open"); },
-                /expects account/,
-                "Cannot get sign of something that is not an account");
 });
 
 QUnit.test("Add jumbled", function(assert) {
@@ -337,54 +315,38 @@ QUnit.test("Add jumbled", function(assert) {
     new Account("expenses", "Expenses", 1, null),
   ];
 
-  var t = new TreeNodeList();
+  var t = new AccountTreeNodeList();
   t.addNodes(nodes);
 
   assert.equal(t.node("groc").name, "Groceries");
 });
 
 QUnit.test("Get root id", function(assert) {
-  var t = makeTreeNodeList();
+  var t = makeAccountTreeNodeListBr();
   assert.equal(t.rootId("bank"), "assets", "bank");
   assert.equal(t.rootId("assets"), null, "top level account");
 });
   
 
-/*
-QUnit.test("Add transaction", function(assert) {
-  var t = makeTreeNodeList();
-  t.resetBalances();
+QUnit.test("Generate TransactionTreeNodeList", function(assert) {
+  var c = makeCurrencyTreeNodeList();
+  var a = makeAccountTreeNodeList();
+  var t = makeTransactionTreeNodeList(c, a);
+  assert.equal(true, true);
+});
+
+QUnit.test("Accumulate amounts", function(assert) {
+  var currencies = makeCurrencyTreeNodeList();
+  var accounts = makeAccountTreeNodeList();
+  var transactions = makeTransactionTreeNodeList(currencies, accounts);
+
+  var accountsTreeTable = accounts.tabulate(currencies);
+
+  transactions.computeTotalForAccounts(currencies, accounts);
   
-  var transaction = { debit: "itcor", credit: "salary", amount: 231500 };
-  t.recordTransaction(transaction);
-  assert.equal(t.getBalance("itcor"), 231500);
-  assert.equal(t.getBalance("salary"), 231500);
+  var transactionsGrandTotal = transactions.accumulate(currencies);
+  var transactionsTreeTable = transactions.tabulate(currencies);
 
-  // check if amount bubbled up to parent accounts
-  assert.equal(t.getBalance("bank"), 231500);
-  assert.equal(t.getBalance("income"), 231500);
-  assert.equal(t.getBalance("accounts"), 0);
+  assert.equal(transactionsGrandTotal.cumulativeTotalInUSD, "$1112.00", "$1112.80 grand total for transations");
+  assert.equal(accounts.node("expenses").totalForSelectedTransactions["TWD"], 1490, "1490 NT in expenses");
 });
-
-QUnit.test("Reverse transaction", function(assert) {
-  var tr = { timestamp: 1000, description: "pizza", amount: 3200, debit: "expenses", credit: "itau" };
-  var reversedTr = reverseTransaction(tr);
-  assert.equal(reversedTr.description, "[Reverse " + tr.description + "]");
-
-  // modifying reversed does not affect original
-  reversedTr.credit = "bank";
-  assert.equal(tr.credit, "itau");
-});
-*/
-
-
-/*
-QUnit.test("Create UL tree", function(assert) {
-  var t = makeTreeNodeList();
-  var bt = t.buildTreeHierarchy();
-  var html_tree = t.ulTree(bt);
-  console.log(html_tree);
-  assert.ok(true);
-});
-*/
-

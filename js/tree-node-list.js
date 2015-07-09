@@ -9,7 +9,6 @@ function TreeNodeList(type, id) {
   this.nodes = [];
 }
 
-// TODO Add in batches,
 // accumulate all node ids, then
 // use queue and move to back if parent or
 // previous sibling not found.
@@ -372,7 +371,7 @@ TreeNodeList.prototype.tabulate = function(currencies) {
       });
     }
   }
-                
+  
   function traverse(currentNode) {
     // use order given by previousSiblingsIds
     var lastChildId = treeNodeList.lastChildId(currentNode.id);
@@ -403,41 +402,41 @@ TreeNodeList.prototype.tabulate = function(currencies) {
         separateToCurrencyColumn(fullNode, newNode, "totalForSelectedTransactions");
         
         /*
-        if (fullNode.balance) {
+          if (fullNode.balance) {
           newNode.balance = JSON.stringify(fullNode.balance);
           _.forEach(currencies.list(), function(currencyCode) {            
-            if (fullNode.balance[currencyCode]) {
-              newNode["balanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.balance[currencyCode]);
-            }
+          if (fullNode.balance[currencyCode]) {
+          newNode["balanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.balance[currencyCode]);
+          }
           });
-        }
+          }
 
-        if (fullNode.cumulativeTotal) {
+          if (fullNode.cumulativeTotal) {
           newNode.cumulativeTotal = JSON.stringify(fullNode.cumulativeTotal);
           _.forEach(currencies.list(), function(currencyCode) {
-            if (fullNode.cumulativeTotal[currencyCode]) {
-              newNode["cumulativeTotalIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeTotal[currencyCode]);
-            }
+          if (fullNode.cumulativeTotal[currencyCode]) {
+          newNode["cumulativeTotalIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeTotal[currencyCode]);
+          }
           });
-        }
+          }
 
-        if (fullNode.cumulativeBalance) {
+          if (fullNode.cumulativeBalance) {
           newNode.cumulativeTotal = JSON.stringify(fullNode.cumulativeBalance);
           _.forEach(currencies.list(), function(currencyCode) {
-            if (fullNode.cumulativeBalance[currencyCode]) {
-              newNode["cumulativeBalanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeBalance[currencyCode]);
-            }
+          if (fullNode.cumulativeBalance[currencyCode]) {
+          newNode["cumulativeBalanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeBalance[currencyCode]);
+          }
           });
-        }
+          }
 
-        if (fullNode.totalForSelectedTransactions) {
+          if (fullNode.totalForSelectedTransactions) {
           newNode.cumulativeTotal = JSON.stringify(fullNode.totalForSelectedTransactions);
           _.forEach(currencies.list(), function(currencyCode) {
-            if (fullNode.totalForSelectedTransactions[currencyCode]) {
-              newNode["totalForSelectedTransactionsIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.totalForSelectedTransactions[currencyCode]);
-            }
+          if (fullNode.totalForSelectedTransactions[currencyCode]) {
+          newNode["totalForSelectedTransactionsIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.totalForSelectedTransactions[currencyCode]);
+          }
           });
-        }
+          }
         */
 
         // node is a transaction
@@ -610,119 +609,85 @@ TreeNodeList.prototype.rootId = function(id) {
   return traverse(this.node(id));
 }
 
+TreeNodeList.prototype.renderTable = function(domId, dataFieldNames, dataTable) {
+  var cellsRenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
+    if (value.indexOf("(") !== -1) {
+      return '<span style="color: #ff0000;">' + value + '</span>';
+    }
+  }
 
-/* MOVED TO TRANSACTION-TREE-NODE-LIST
-// to be called with transactions only
-TreeNodeList.prototype.computeCumulativeTotal = function(accounts, transactions) {
-transactions = transactions || this.nodes;
+  var jqxDataFields = [
+    { name: "name", type: "string" },
+    { name: "children", type: "array" },
+  ];
 
-if (transactions.length === 0) {
-console.warn("Compute cumulativeTotal called with no transactions");
-return;
-}
+  // define jqxDataFields
+  _.forEach(dataFieldNames, function(fieldName) {
+    _.forEach(currenciesList, function(currency) {
+      jqxDataFields.push({
+        name: fieldName + "In" + currency,
+        type: "string",
+      });
+    });
+  });
+  
+  var source = {
+    dataType: "json",
+    dataFields: jqxDataFields,
+    hierarchy: {
+      root: "children",
+    },
+    localData: dataTable,
+  };
 
-if (transactions[0].type !== "transaction") {
-throw new Error("computeCumulativeTotal() must be called as transactions.computeCumulativeTotal(accounts)");
-}
+  var dataAdapter = new $.jqx.dataAdapter(source, {
+    loadComplete: function() {
+    }
+  });
 
-function bubble_amount(source, money) {
-if (!source.cumulativeTotal[money.currency.code]) {
-source.cumulativeTotal[money.currency.code] = 0;
-}
-source.cumulativeTotal[money.currency.code] += money.amount;
-if (source.parentId) {
-bubble_amount(accounts.node(source.parentId), money);
-}
-}
+  var jqxColumns = [
+    { text: "Name", columnGroup: "infoGroup", dataField: "name", minWidth: 200 },
+  ];
 
-_.forEach(accounts.nodes, function(account) {
-account.cumulativeTotal = {};
-});
+  // define jqxColumns
 
-_.forEach(transactions, function(transaction) {
-var debit = transaction.debit;
-var credit = transaction.credit;
-var description = transaction.description;
+  _.forEach(dataFieldNames, function(dataFieldName) {
+    _.forEach(currenciesList, function(currency) {
+      jqxColumns.push({
+        text: currency,
+        columnGroup: dataFieldName + "Group",
+        dataField: dataFieldName + "In" + currency,
+        align: "right",
+        cellsAlign: "right",
+        cellsRenderer: cellsRenderer,
+        width: 80,
+      });
+    });
+  });
 
-// throw error if debit or credit do not exist
-if (debit !== null && accounts.node(debit) === undefined) {
-throw new Error("Cannot add transaction " + description + ", debit " + debit + " not found");
-}
+  var columnGroups = [
+    { text: "Information", name: "infoGroup", align: "center" },
+  ];
 
-if (credit !== null && accounts.node(credit) === undefined) {
-throw new Error("Cannot add transaction " + description + ", credit " + credit + " not found");
-}
+  _.forEach(dataFieldNames, function(dataFieldName) {
+    columnGroups.push(
+      { text: camelCaseToRegular(dataFieldName), name: dataFieldName + "Group", align: "center" }
+    );
+  });
+  
+  $("#" + domId).jqxTreeGrid({
+    source: dataAdapter,
+    columns: jqxColumns,
+    columnGroups: columnGroups,
+    
+  });
 
-if (debit !== null && credit !== null && currency !== null && amount !== null) {
-var currency = transaction.currency;
-var amount = transaction.amount;
-var debitAccount = accounts.node(debit);
-var creditAccount = accounts.node(credit);
-var debitSign = accounts.accountSign(debit);
-var creditSign = accounts.accountSign(credit);
-
-bubble_amount(debitAccount, { currency: currency, amount: amount * debitSign });
-bubble_amount(creditAccount, { currency: currency, amount: -amount * creditSign });
-}
-});
-}
-*/
-
-
-/* MOVED TO TRANSACTION-TREE-NODE-LIST
-   TreeNodeList.prototype.accumulate = function() {
-   var treeNodeList = this;
-
-   function bubble_amount(source, money) {
-   if (!source.cumulativeTotal[money.currency.code]) {
-   source.cumulativeTotal[money.currency.code] = 0;
-   }
-   source.cumulativeTotal[money.currency.code] += money.amount;
-   if (source.parentId) {
-   bubble_amount(treeNodeList.node(source.parentId), money);
-   }
-   }
-
-   if (this.nodes.length === 0) {
-   // do nothing
-   console.warn("accumulate() called with no nodes.");
-   return;  
-   }
-   
-   if (this.nodes[0].type !== "transaction") {
-   console.warn("accumulate() is meant to be used for transactions.");
-   return;
-   }
-
-   _.forEach(this.nodes, function(node) {
-   node.cumulativeTotal = {};
-   });
-
-   var grandTotal = { cumulativeTotal: {} };
-
-   _.forEach(this.nodes, function(node) {
-   var currency = node.currency;
-   var amount = node.amount;
-   if (currency !== null && amount !== null) {
-   bubble_amount(node, { currency: currency, amount: amount });
-
-   // add to grandTotal
-   if (!grandTotal.cumulativeTotal[currency.code]) {
-   grandTotal.cumulativeTotal[currency.code] = 0;
-   }
-   
-   grandTotal.cumulativeTotal[currency.code] += amount;
-   }
-   });
-
-   var currencies = this.currencies();
-
-   _.forEach(currencies.list(), function(currencyCode) {
-   grandTotal["cumulativeTotalIn" + currencyCode] = formatMoney(currencies[currencyCode], grandTotal.cumulativeTotal[currencyCode]);
-   });
-
-   grandTotal.name = "Grand Total";
-   
-   return grandTotal;
-   };
-*/
+  // hide currencies with display: false
+  _.forEach(currencies.nodes, function(currency) {
+    if (!currency.display) {
+      _.forEach(dataFieldNames, function(dataFieldName) {
+        $("#" + domId).jqxTreeGrid('hideColumn', dataFieldName + 'In' + currency.code)
+      });
+    }
+  });
+};

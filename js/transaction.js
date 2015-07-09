@@ -1,6 +1,6 @@
 "use strict";
 
-function Transaction(id, debit, credit, timestamp, currency, amount, description, parentId, previousSiblingId) {
+function Transaction(id, debit, credit, timestamp, currency, amount, description, parentId, previousSiblingId, display) {
   this.type = "transaction";
 
   this.id = id || null;
@@ -15,8 +15,15 @@ function Transaction(id, debit, credit, timestamp, currency, amount, description
 
   // make transaction compatible with account
   this.name = description;
+
+  if (display === undefined) {
+    this.display = true;
+  } else {
+    this.display = display;
+  }
 }
 
+/* behavior moved to transaction-tree-node-list.js
 // update balance of corresponding debit and credit accounts
 Transaction.prototype.record = function(accounts) {
   if (this.debit !== null && this.credit !== null) {
@@ -46,3 +53,4 @@ Transaction.prototype.record = function(accounts) {
     creditAccount.balance[currencyCode] -= creditAccount.sign * this.amount;
   }
 };
+*/

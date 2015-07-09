@@ -30,9 +30,6 @@ function buildTree(lst) {
     }
   });
 
-  // sort queue (for ordering)
-  // TODO
-
   // if an element references a non-existent parent or sibling, remove it
   _.forEach(queue, function(element) {
     if (!_.contains(ids, element.parent)) {
