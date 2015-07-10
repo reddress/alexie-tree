@@ -3,8 +3,8 @@
 $(document).ready(function() {
   $(".no-fouc").removeClass('no-fouc');
 
-  var tabIds = { "transactions": 0, 
-                 "accounts": 1 };
+  var tabIds = { "accounts": 0, 
+                 "transactions": 1 };
   
   transactions.renderTable(currencies, accounts, "transactionsTreeGrid");
   accounts.renderTable(currencies, this, "accountsTreeGrid");
