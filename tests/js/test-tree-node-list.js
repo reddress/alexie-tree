@@ -344,9 +344,9 @@ QUnit.test("Accumulate amounts", function(assert) {
 
   transactions.computeTotalForAccounts(currencies, accounts);
   
-  var transactionsGrandTotal = transactions.accumulate(currencies);
-  var transactionsTreeTable = transactions.tabulate(currencies);
+  var transactionsGrandTotal = transactions.accumulate(currencies, accounts);
+  var transactionsTreeTable = transactions.tabulate(currencies, accounts);
 
-  assert.equal(transactionsGrandTotal.cumulativeTotalInUSD, "$1112.00", "$1112.80 grand total for transations");
+  assert.equal(transactionsGrandTotal.cumulativeTotalInUSD, "$5,003.38", "Grand total for transactions");
   assert.equal(accounts.node("expenses").totalForSelectedTransactions["TWD"], 1490, "1490 NT in expenses");
 });

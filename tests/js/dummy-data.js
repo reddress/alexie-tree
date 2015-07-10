@@ -10,8 +10,6 @@ function makeCurrencyTreeNodeList() {
 
   return currencies;
 }
-var currencies = makeCurrencyTreeNodeList();
-var currenciesList = currencies.list();
 
 function makeAccountTreeNodeList() {
   var accounts = new AccountTreeNodeList();
@@ -64,7 +62,6 @@ function makeAccountTreeNodeList() {
 
   return accounts;
 }
-var accounts = makeAccountTreeNodeList();
 
 function now() {
   return new Date().getTime();
@@ -75,6 +72,11 @@ var now = now();
 function makeTransactionTreeNodeList(currencies, accounts) {
   var transactions = new TransactionTreeNodeList();
 
+  function addExpense(amount, description) {
+    // shortcut for adding a transactions with multiple defaults
+    transactions.recordTransaction(currencies, accounts, new Transaction("shortcut" + transactions.nodes.length, "expenses", "assets", now, "USD", amount, description));
+  }
+  
   transactions.recordTransaction(currencies, accounts, new Transaction("openAssets", "assets", "open", now, "USD", 100000, "Opening balance"));
   transactions.recordTransaction(currencies, accounts, new Transaction("ikeaBed", null, null, now, null, null, "Ikea Bed"));
 
@@ -96,6 +98,37 @@ function makeTransactionTreeNodeList(currencies, accounts) {
   transactions.recordTransaction(currencies, accounts, new Transaction("appleJuice", "stm", "assets", now, "EUR", 8000, "Apple juice"));
 
   transactions.recordTransaction(currencies, accounts, new Transaction("incomeTw", "union", "income", now, "TWD", 30140700, "Receipt Lottery"));
+
+  addExpense(1200, "Shampoo");
+  addExpense(9820, "Sushi");
+  addExpense(30, "gum");
+  addExpense(120099, "plasma tv");
+  addExpense(3299, "prof. layton vs phoenix wright");
+  addExpense(1210, "orange juice");
+  addExpense(9920, "dress shirt");
+  addExpense(75, "spare change");
+  addExpense(350, "parking");
+  addExpense(250, "bus");
+  addExpense(100, "water bottle");
+  addExpense(7203, "electricity bill");
+  addExpense(210030, "rent");
+  addExpense(8210, "groceries");
+  addExpense(5000, "loan to a friend");
+  addExpense(290, "library late fee");
+  addExpense(12030, "crystal ring");
+  addExpense(22, "taxes");
   
   return transactions;
 }
+
+var currencies = makeCurrencyTreeNodeList();
+var currenciesList = currencies.list();
+
+var accounts = makeAccountTreeNodeList();
+
+var transactions = makeTransactionTreeNodeList(currencies, accounts);
+var transactionsGrandTotal = transactions.accumulate(currencies);
+transactions.computeTotalForAccounts(currencies, accounts);
+
+var accountsTreeTable = accounts.tabulate(currencies, accounts);
+var transactionsTreeTable = transactions.tabulate(currencies, accounts);

@@ -51,17 +51,6 @@ TreeNodeList.prototype.addNodes = function(nodes) {
   } 
 }
 
-/* MOVED TO ACCOUNT-TREE-NODE-LIST
-   TreeNodeList.prototype.accountSign = function(id) {
-   var type = this.node(id).type;
-   if (type !== "account") {
-   throw new Error("accountSign() expects account, but " + type + " passed.");
-   }
-   return this.node(id).sign;
-   }
-*/
-
-
 TreeNodeList.prototype.contains = function(id) {
   return _.filter(this.nodes, { 'id': id })[0];
 };
@@ -203,46 +192,6 @@ TreeNodeList.prototype.add = function(newNode) {
   // 
 };
 
-/* MOVED TO TRANSACTION-TREE-NODE-LIST
-   TreeNodeList.prototype.recordTransaction = function(accounts, transaction) {
-   var debit = transaction.debit;
-   var credit = transaction.credit;
-   var description = transaction.description;
-   
-   // throw error if debit or credit do not exist
-   if (debit !== null && accounts.node(debit) === undefined) {
-   throw new Error("Cannot add transaction " + description + ", debit " + debit + " not found");
-   }
-
-   if (credit !== null && accounts.node(credit) === undefined) {
-   throw new Error("Cannot add transaction " + description + ", credit " + credit + " not found");
-   }
-
-   if (debit !== null && credit !== null && currency !== null && amount !== null) {
-   var currency = transaction.currency;
-   var amount = transaction.amount;
-
-   var debitAccount = accounts.node(debit);
-   var creditAccount = accounts.node(credit);
-
-   var debitSign = accounts.accountSign(debit);
-   var creditSign = accounts.accountSign(credit);
-
-   if (!debitAccount.balance[currency.code]) {
-   debitAccount.balance[currency.code] = 0;
-   }
-   
-   if (!creditAccount.balance[currency.code]) {
-   creditAccount.balance[currency.code] = 0;
-   }
-   
-   debitAccount.balance[currency.code] += amount * debitSign;
-   creditAccount.balance[currency.code] -= amount * creditSign;
-   }
-   
-   this.add(transaction);
-   };
-*/
 
 // build trees on demand
 TreeNodeList.prototype.buildTreeHierarchy = function(rootId) {
@@ -320,44 +269,8 @@ TreeNodeList.prototype.printTree = function(rootId) {
   return result;
 }
 
-/* MOVED TO TRANSACTION-TREE-NODE-LIST
-   TreeNodeList.prototype.currencies = function() {
-   var currencyTable = {};
 
-   function addCurrencyToTable(currency) {
-   var currencyCode = currency.code;
-   
-   if (!currencyTable[currencyCode]) {
-   
-   currencyTable[currencyCode] = currency;
-   }
-   }
-   // collect currencies
-   var currenciesList = [];
-   _.forEach(this.nodes, function(node) {
-
-   // node is a transaction
-   if (node.currency) {
-   currenciesList = _(currenciesList).union(node.currency.code);
-   addCurrencyToTable(node.currency);
-   }
-
-   // node is an account
-   if (node.balance) {
-   currenciesList = _(currenciesList).union(_.keysIn(node.balance));
-   }
-
-   if (node.cumulativeTotal) {
-   currenciesList = _(currenciesList).union(_.keysIn(node.cumulativeTotal));
-   }
-   });
-
-   currencyTable.list = currenciesList.value();
-   return currencyTable;;
-   }
-*/
-
-TreeNodeList.prototype.tabulate = function(currencies) {
+TreeNodeList.prototype.tabulate = function(currencies, accounts) {
   var result = { id: null, children: [] };
   var treeNodeList = this;
 
@@ -370,6 +283,17 @@ TreeNodeList.prototype.tabulate = function(currencies) {
         }
       });
     }
+  }
+
+  function formatIfExists(fullNode, newNode, field, format) {
+    format = format || function(input) { return input; };
+    if (fullNode[field]) {
+      newNode[field] = format(fullNode[field]);
+    }
+  }
+
+  function getAccountName(accountId) {
+    return accounts.node(accountId).name;
   }
   
   function traverse(currentNode) {
@@ -399,51 +323,17 @@ TreeNodeList.prototype.tabulate = function(currencies) {
         separateToCurrencyColumn(fullNode, newNode, "balance");
         separateToCurrencyColumn(fullNode, newNode, "cumulativeTotal");
         separateToCurrencyColumn(fullNode, newNode, "cumulativeBalance");
-        separateToCurrencyColumn(fullNode, newNode, "totalForSelectedTransactions");
-        
-        /*
-          if (fullNode.balance) {
-          newNode.balance = JSON.stringify(fullNode.balance);
-          _.forEach(currencies.list(), function(currencyCode) {            
-          if (fullNode.balance[currencyCode]) {
-          newNode["balanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.balance[currencyCode]);
-          }
-          });
-          }
+        separateToCurrencyColumn(fullNode, newNode, "totalForSelectedTransactions");        
 
-          if (fullNode.cumulativeTotal) {
-          newNode.cumulativeTotal = JSON.stringify(fullNode.cumulativeTotal);
-          _.forEach(currencies.list(), function(currencyCode) {
-          if (fullNode.cumulativeTotal[currencyCode]) {
-          newNode["cumulativeTotalIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeTotal[currencyCode]);
-          }
-          });
-          }
-
-          if (fullNode.cumulativeBalance) {
-          newNode.cumulativeTotal = JSON.stringify(fullNode.cumulativeBalance);
-          _.forEach(currencies.list(), function(currencyCode) {
-          if (fullNode.cumulativeBalance[currencyCode]) {
-          newNode["cumulativeBalanceIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.cumulativeBalance[currencyCode]);
-          }
-          });
-          }
-
-          if (fullNode.totalForSelectedTransactions) {
-          newNode.cumulativeTotal = JSON.stringify(fullNode.totalForSelectedTransactions);
-          _.forEach(currencies.list(), function(currencyCode) {
-          if (fullNode.totalForSelectedTransactions[currencyCode]) {
-          newNode["totalForSelectedTransactionsIn" + currencyCode] = formatMoney(currencies.node(currencyCode), fullNode.totalForSelectedTransactions[currencyCode]);
-          }
-          });
-          }
-        */
-
-        // node is a transaction
-        if (fullNode.amount) {
+        // node is a transaction, has only a single currency
+        if (fullNode.type === 'transaction') {
           if (fullNode.amount) {
             newNode["balanceIn" + fullNode.currency] = formatMoney(currencies.node(fullNode.currency), fullNode.amount);
           }
+
+          formatIfExists(fullNode, newNode, "debit", getAccountName);
+          formatIfExists(fullNode, newNode, "credit", getAccountName);
+          formatIfExists(fullNode, newNode, "timestamp", parseTimeMillis);
         }
         
         currentNode.children.push(newNode);
@@ -609,7 +499,7 @@ TreeNodeList.prototype.rootId = function(id) {
   return traverse(this.node(id));
 }
 
-TreeNodeList.prototype.renderTable = function(domId, dataFieldNames, dataTable) {
+TreeNodeList.prototype.renderTable = function(domId, infoDataFieldNames, currencyDataFieldNames, dataTable) {
   var cellsRenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
     if (value.indexOf("(") !== -1) {
       return '<span style="color: ' + jqxConstants.negativeAmountColor + ';">' + value + '</span>';
@@ -617,17 +507,25 @@ TreeNodeList.prototype.renderTable = function(domId, dataFieldNames, dataTable) 
   }
 
   var jqxDataFields = [
-    { name: "name", type: "string" },
     { name: "children", type: "array" },
+    { name: "name", type: "string" },
   ];
 
-  // define jqxDataFields
-  _.forEach(dataFieldNames, function(fieldName) {
+  // define jqxDataFields for currency values
+  _.forEach(currencyDataFieldNames, function(fieldName) {
     _.forEach(currenciesList, function(currency) {
       jqxDataFields.push({
         name: fieldName + "In" + currency,
         type: "string",
       });
+    });
+  });
+  
+  // define jqxDataFields for info fields
+  _.forEach(infoDataFieldNames, function(fieldName) {
+    jqxDataFields.push({
+      name: fieldName,
+      type: "string",
     });
   });
   
@@ -648,10 +546,9 @@ TreeNodeList.prototype.renderTable = function(domId, dataFieldNames, dataTable) 
   var jqxColumns = [
     { text: "Name", columnGroup: "infoGroup", dataField: "name", width: jqxConstants.nameColumnWidth },
   ];
-
-  // define jqxColumns
-
-  _.forEach(dataFieldNames, function(dataFieldName) {
+  
+  // define jqxColumns for currency data
+  _.forEach(currencyDataFieldNames, function(dataFieldName) {
     _.forEach(currenciesList, function(currency) {
       jqxColumns.push({
         text: currency,
@@ -665,27 +562,44 @@ TreeNodeList.prototype.renderTable = function(domId, dataFieldNames, dataTable) 
     });
   });
 
+  // define jqxColumns for info fields
+  _.forEach(infoDataFieldNames, function(dataFieldName) {
+    jqxColumns.push({
+      text: camelCaseToRegular(dataFieldName),
+      columnGroup: "transactionInfoGroup",
+      dataField: dataFieldName,
+      align: "left",
+      cellsAlign: "left",
+      width: jqxConstants.infoColumnWidth,
+    });
+  });
+
   var columnGroups = [
     { text: "Information", name: "infoGroup", align: "center" },
   ];
 
-  _.forEach(dataFieldNames, function(dataFieldName) {
+  _.forEach(currencyDataFieldNames, function(dataFieldName) {
     columnGroups.push(
       { text: camelCaseToRegular(dataFieldName), name: dataFieldName + "Group", align: "center" }
     );
   });
-  
+
+  // if making table for transactions
+  if (infoDataFieldNames.length > 0) {
+    columnGroups.push(
+      { text: "Transaction Details", name: "transactionInfoGroup", align: "center" });
+  }
+
   $("#" + domId).jqxTreeGrid({
     source: dataAdapter,
     columns: jqxColumns,
     columnGroups: columnGroups,
-    
   });
 
   // hide currencies with display: false
   _.forEach(currencies.nodes, function(currency) {
     if (!currency.display) {
-      _.forEach(dataFieldNames, function(dataFieldName) {
+      _.forEach(currencyDataFieldNames, function(dataFieldName) {
         $("#" + domId).jqxTreeGrid('hideColumn', dataFieldName + 'In' + currency.code)
       });
     }

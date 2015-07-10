@@ -22,35 +22,3 @@ function Transaction(id, debit, credit, timestamp, currency, amount, description
     this.display = display;
   }
 }
-
-/* behavior moved to transaction-tree-node-list.js
-// update balance of corresponding debit and credit accounts
-Transaction.prototype.record = function(accounts) {
-  if (this.debit !== null && this.credit !== null) {
-    var debitAccount = accounts[this.debit];
-    var creditAccount = accounts[this.credit];
-
-    if (!debitAccount) {
-      throw new Error("Transaction.record() did not find debit account " + JSON.stringify(this));
-    }
-
-    if (!creditAccount) {
-      throw new Error("Transaction.record() did not find credit account " + JSON.stringify(this));
-    }
-    
-    // initialize values if they are undefined
-    var currencyCode = this.currency.code;
-
-    if (!debitAccount.balance[currencyCode]) {
-      debitAccount.balance[currencyCode] = 0;
-    }
-
-    if (!creditAccount.balance[currencyCode]) {
-      creditAccount.balance[currencyCode] = 0;
-    }
-
-    debitAccount.balance[currencyCode] += debitAccount.sign * this.amount;
-    creditAccount.balance[currencyCode] -= creditAccount.sign * this.amount;
-  }
-};
-*/

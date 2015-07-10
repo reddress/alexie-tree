@@ -1,0 +1,23 @@
+html, body {
+    width: 98%;
+    height: 95%;
+}    
+
+.no-fouc {
+    display: none;
+}
+
+#alexieToolbar {
+    display: block;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+}
+
+#chartRibbon {
+    position: fixed;
+}
+
+#chartTabs {
+    margin-top: 35px;
+}

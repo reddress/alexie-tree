@@ -10,9 +10,9 @@ AccountTreeNodeList.prototype.accountSign = function(id) {
   return this.node(id).sign;
 }
 
-AccountTreeNodeList.prototype.renderTable = function(currencies, domId) {
-  var accountsTreeTable = this.tabulate(currencies);
+AccountTreeNodeList.prototype.renderTable = function(currencies, accounts, domId) {
+  var accountsTreeTable = this.tabulate(currencies, this);
 
-  var fields = ["cumulativeBalance", "totalForSelectedTransactions", "balance"];
-  TreeNodeList.prototype.renderTable.call(this, domId, fields, accountsTreeTable);
+  var currencyFields = ["cumulativeBalance", "totalForSelectedTransactions", "balance"];
+  TreeNodeList.prototype.renderTable.call(this, domId, [], currencyFields, accountsTreeTable);
 };

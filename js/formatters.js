@@ -1,5 +1,14 @@
 "use strict";
 
+function addThousandsSeparator(s) {
+  return s.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+}
+
+function camelCaseToRegular(camel) {
+  // http://stackoverflow.com/questions/4149276/javascript-camelcase-to-regular-form
+  return camel.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
+}
+
 function formatMoney(currency, amount) {
   // save sign
   var sign = amount < 0 ? "-" : "";
@@ -14,7 +23,7 @@ function formatMoney(currency, amount) {
     if (number.length < 2) {
       number = "0" + number;
     }
-  
+    
     if (number.length < 3) {
       number = "0" + number;
     }  
@@ -24,11 +33,11 @@ function formatMoney(currency, amount) {
     var whole = number.slice(0, digits-2);
     var fraction = number.slice(digits-2);
     
-    whole = whole.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    whole = addThousandsSeparator(whole);
     
     number = whole + "." + fraction;
   } else {
-    number = number.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    number = addThousandsSeparator(number);
   }
   
   var result = "";
@@ -45,17 +54,6 @@ function formatMoney(currency, amount) {
   return result;
 }
 
-function firstOfMonth() {
-  var now = new Date();
-  var day = "1";
-  var month = (now.getMonth() + 1).toString();
-  var year = (now.getYear() - 100).toString();
-  
-  return [day, month, year].join("/");
+function parseTimeMillis(millis) {
+  return moment(parseInt(millis, 10)).format("D MMM YYYY HH:mm");
 }
-
-function camelCaseToRegular(camel) {
-  // http://stackoverflow.com/questions/4149276/javascript-camelcase-to-regular-form
-  return camel.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
-}
-

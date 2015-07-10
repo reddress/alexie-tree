@@ -199,18 +199,24 @@ TransactionTreeNodeList.prototype.accumulate = function(currencies) {
   });
    
   
-  grandTotal.name = "Grand Total";
+  grandTotal.name = "Total";
   
   return grandTotal;
 };
 
-TransactionTreeNodeList.prototype.renderTable = function(currencies, domId) {
+TransactionTreeNodeList.prototype.renderTable = function(currencies, accounts, domId) {
   var transactionsGrandTotal = this.accumulate(currencies);
-  var transactionsTreeTable = this.tabulate(currencies);
+  var transactionsTreeTable = this.tabulate(currencies, accounts);
 
   // add grand total line
-  transactionsTreeTable.children.splice(0, 0, transactionsGrandTotal);
+  transactionsTreeTable.children.push(transactionsGrandTotal);
+  
+  // top of list
+  // transactionsTreeTable.children.splice(0, 0, transactionsGrandTotal);
 
-  var fields = ["cumulativeTotal", "balance"];
-  TreeNodeList.prototype.renderTable.call(this, domId, fields, transactionsTreeTable);
+  // leave out balance
+  // var currencyFields = ["cumulativeTotal", "balance"];
+  
+  var currencyFields = ["cumulativeTotal"];
+  TreeNodeList.prototype.renderTable.call(this, domId, ["timestamp", "debit", "credit"], currencyFields, transactionsTreeTable);
 };
