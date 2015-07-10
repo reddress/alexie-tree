@@ -3,6 +3,6 @@
 var jqxConstants = {
   "negativeAmountColor": "#ff0000",
   "nameColumnWidth": 220,
-  "amountColumnWidth": 100,
-  "infoColumnWidth": 150,
+  "amountColumnWidth": 110,
+  "infoColumnWidth": 180,
 };

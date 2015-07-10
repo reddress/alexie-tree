@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>ALEXIE Tree</title>
+    <link rel="stylesheet" href="../lib/css/jqwidgets/jqx.base.css" type="text/css">
+    <link rel="stylesheet" href="../lib/css/jqwidgets/jqx.darkblue.css" type="text/css">
+    <link rel="stylesheet" href="../lib/css/jqwidgets/jqx.energyblue.css" type="text/css">
+	<!--
+		Flash of Unstyled Content fix
+		http://johnpolacek.com/2012/10/03/help-prevent-fouc/
+	  -->
+    <link rel="stylesheet" href="../css/styles.css" type="text/css">
+	<script>
+	  document.documentElement.className = 'no-fouc';
+	</script>
+  </head>
+  <body>
+	<div id="alexieToolbar">
+      [ALEXIE Tree] From DateTime to DateTime, Search
+	</div>
+	
+	<!-- Tabs -->
+	<div id="chartTabs">
+	  <ul>
+		<li>Accounts</li>
+		<li>Transactions</li>
+	  </ul>
+      <div id="accountsTreeGridPanel" class="jqxPanelClass">
+		<div id="accountsTreeGrid"></div>
+      </div>
+
+      <div id="transactionsTreeGridPanel" class="jqxPanelClass">
+		<div id="transactionsTreeGrid"></div>
+      </div>      
+	</div> <!-- END tabs -->
+
+	<script src="../lib/js/jquery-1.11.3.min.js"></script>
+	<script src="../lib/js/lodash.min.js"></script>
+	<script src="../lib/js/moment-with-locales.min.js"></script>
+	<script src="../lib/js/moment-timezone-with-data.min.js"></script>
+
+	<script src="../js/account.js"></script>
+	<script src="../js/currency.js"></script>
+	<script src="../js/transaction.js"></script>
+
+	<script src="../js/parsers.js"></script>
+	<script src="../js/formatters.js"></script>
+
+	<script src="../js/tree-node-list.js"></script>
+	<script src="../js/currency-tree-node-list.js"></script>
+	<script src="../js/account-tree-node-list.js"></script>
+	<script src="../js/transaction-tree-node-list.js"></script>
+
+	<script src="../js/jqx-constants.js"></script>
+	<script src="../lib/js/jqwidgets/jqxcore.js"></script>
+	<script src="../lib/js/jqwidgets/jqxtabs.js"></script>
+
+	<script src="../lib/js/jqwidgets/jqxdata.js"></script>
+	<script src="../lib/js/jqwidgets/jqxbuttons.js"></script>
+	<script src="../lib/js/jqwidgets/jqxscrollbar.js"></script>
+	<script src="../lib/js/jqwidgets/jqxpanel.js"></script>
+
+	<script src="../lib/js/jqwidgets/jqxdropdownlist.js"></script>
+
+	<script src="../lib/js/jqwidgets/jqxdatatable.js"></script>
+	<script src="../lib/js/jqwidgets/jqxtreegrid.js"></script>
+
+	<script src="js/currency-exchange-data.js"></script>
+	<script src="../js/dashboard.js"></script>
+  </body>
+</html>

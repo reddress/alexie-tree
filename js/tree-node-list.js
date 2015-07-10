@@ -591,6 +591,7 @@ TreeNodeList.prototype.renderTable = function(domId, infoDataFieldNames, currenc
   }
 
   $("#" + domId).jqxTreeGrid({
+    theme: "energyblue",
     source: dataAdapter,
     columns: jqxColumns,
     columnGroups: columnGroups,

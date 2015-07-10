@@ -55,5 +55,5 @@ function formatMoney(currency, amount) {
 }
 
 function parseTimeMillis(millis) {
-  return moment(parseInt(millis, 10)).format("D MMM YYYY HH:mm");
+  return moment(parseInt(millis, 10)).format("ddd D MMM YYYY HH:mm");
 }
