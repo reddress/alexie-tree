@@ -10,7 +10,6 @@ var transactionListBRL = [
   "2/5/15; Opening balance; 52.78; brpou; open",
   "4/5/15; April 2015 Salary; 1200; itcor; salary",
   "6/5/15; Plasma TV; 1599; home; curr",
-  "8/5/15; receive from exchange; 312; wal; curr",
   "9/5/15; Chocolate and cookies; 39.40; merc; wal",
   "11/5/15; Pastel; 5.5; rest; wal",
   "11/5/15; Water; 52.40; merc; itcor",
@@ -27,8 +26,7 @@ var transactionListBRL = [
 var transactionListUSD = [
   "1/5/15; Opening balance; 920; stor; open",
   "2/5/15; Opening balance; 2652.17; amer; open",
-  "2/5/15; Payment for plasma TV; 626; curr; credit",
-  "8/5/15; pay for exchange; 100; stor; curr",
+  "2/5/15; Payment for plasma TV; 524.31; curr; credit",
   "12/5/15; Charity; 30; doac; amer",
   "23/5/15; Airfare; 920.32; tr; amer",
 ];
@@ -45,7 +43,7 @@ function makeCurrencyTreeNodeList() {
   
   currencies.add(new Currency("BRL", "Brazilian Real", "R$ ", true, true));
   currencies.add(new Currency("USD", "U.S. Dollar", "$", true, true));
-  currencies.add(new Currency("TWD", "New Taiwan Dollar", "NT", false, false));
+  currencies.add(new Currency("TWD", "New Taiwan Dollar", "元", false, false));
 
   return currencies;
 }
