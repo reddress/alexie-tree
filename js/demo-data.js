@@ -3,13 +3,13 @@
 // in-memory data
 var transactionListBRL = [
   "1/5/15; Opening balance; 129.35; wal; open",
-  "2/5/15; Opening balance; 1600; stor; open",
-  "2/5/15; Opening balance; 723.84; itcor; open",
-  "2/5/15; Opening balance; 3218.20; itpou; open",
-  "2/5/15; Opening balance; 201.92; brcor; open",
-  "2/5/15; Opening balance; 12142.78; brpou; open",
-  "4/5/15; April 2015 Salary; 3300; itcor; salary",
-  "6/5/15; Plasma TV; 5599; home; curr",
+  "2/5/15; Opening balance; 160; stor; open",
+  "2/5/15; Opening balance; 73.84; itcor; open",
+  "2/5/15; Opening balance; 218.20; itpou; open",
+  "2/5/15; Opening balance; 01.92; brcor; open",
+  "2/5/15; Opening balance; 52.78; brpou; open",
+  "4/5/15; April 2015 Salary; 1200; itcor; salary",
+  "6/5/15; Plasma TV; 1599; home; curr",
   "8/5/15; receive from exchange; 312; wal; curr",
   "9/5/15; Chocolate and cookies; 39.40; merc; wal",
   "11/5/15; Pastel; 5.5; rest; wal",
@@ -20,22 +20,22 @@ var transactionListBRL = [
   "17/5/15; Comic book; 5.9; livr; wal",
   "19/5/15; Italia bank fee; 15.9; tar; itcor",
   "22/5/15; Subway; 3; tr; wal",
-  "9/6/15; Rent; 1200; home; itcor",
+  "9/6/15; Rent; 600; home; itcor",
   "10/6/15; Electricity bill; 42.19; util; itcor",
 ];
 
 var transactionListUSD = [
   "1/5/15; Opening balance; 920; stor; open",
   "2/5/15; Opening balance; 2652.17; amer; open",
-  "2/5/15; Payment for plasma TV; 1866; curr; credit",
+  "2/5/15; Payment for plasma TV; 626; curr; credit",
   "8/5/15; pay for exchange; 100; stor; curr",
   "12/5/15; Charity; 30; doac; amer",
   "23/5/15; Airfare; 920.32; tr; amer",
 ];
 
 var transactionListTWD = [
-  "1/5/15; Opening balance; 432.50; unity; open",
-  "2/5/15; Opening balance; 52.00; stor; open",
+  "1/5/15; Opening balance; 18.50; unity; open",
+  "2/5/15; Opening balance; 2.00; stor; open",
   "12/5/15; Egg rolls; 1.20; goody; unity",
   "14/5/15; Beef noodles; 1.60; rest; unity",
 ];
