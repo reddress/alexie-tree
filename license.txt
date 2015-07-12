@@ -1,5 +1,5 @@
 ALEXIE Tree
-(c) 2015 Heitor Chang <heitorchang@gmail.com>
+Copyright (c) 2015 Heitor Chang <heitorchang@gmail.com>
 
 MIT License
 
@@ -57,7 +57,8 @@ https://lodash.com/license
 Licensed under the MIT License
 
 Based on Underscore.js 1.7.0,
-Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters
+& Editors
 
 -----------------------------------------------------------------------------
 This software uses QUnit v. 1.18.0
@@ -72,3 +73,5 @@ Copyright Tim Wood, Iskren Chernev, Moment.js contributors
 http://momentjs.com/
 
 Licensed under the MIT License
+
+-----------------------------------------------------------------------------
